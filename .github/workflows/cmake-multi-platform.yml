@@ -55,27 +55,25 @@ jobs:
         echo "build-output-dir=${{ github.workspace }}/tests/build" >> "$GITHUB_OUTPUT"
 
     - name: Configure CMake
-      # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
-      # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
       run: >
-        cmake -B ${{ steps.strings.outputs.build-output-dir }}
-        -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
-        -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
-        -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+        cmake -B build \
+        -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }} \
+        -DCMAKE_C_COMPILER=${{ matrix.c_compiler }} \
+        -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
         -S ${{ github.workspace }}
 
     - name: Build
       shell: bash
       run: |
         if [[ "${{ runner.os }}" == "Windows" ]]; then
-          cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
+          cmake --build build --config ${{ matrix.build_type }}
         else
-          cmake --build ${{ steps.strings.outputs.build-output-dir }}
+          cmake --build build
         fi
 
     - name: Test
       shell: bash
-      working-directory: ${{ steps.strings.outputs.build-output-dir }}
+      working-directory: build
       run: |
         if [[ "${{ runner.os }}" == "Windows" ]]; then
           ctest -VV --build-config ${{ matrix.build_type }}
