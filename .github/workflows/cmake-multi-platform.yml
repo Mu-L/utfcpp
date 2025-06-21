@@ -65,6 +65,7 @@ jobs:
         -S ${{ github.workspace }}
 
     - name: Build
+      shell: bash
       run: |
         if [[ "${{ runner.os }}" == "Windows" ]]; then
           cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
@@ -73,6 +74,7 @@ jobs:
         fi
 
     - name: Test
+      shell: bash
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
       run: |
         if [[ "${{ runner.os }}" == "Windows" ]]; then
