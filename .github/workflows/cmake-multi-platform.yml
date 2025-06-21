@@ -54,13 +54,12 @@ jobs:
       run: |
         echo "build-output-dir=${{ github.workspace }}/tests/build" >> "$GITHUB_OUTPUT"
 
-    - name: Configure CMake
-      run: >
-        cmake -B tests/build \
-        -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }} \
-        -DCMAKE_C_COMPILER=${{ matrix.c_compiler }} \
-        -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
-        -S ${{ github.workspace }}
+    - name: Configure CMake (from tests/)
+      run: |
+        cmake -B tests/build -S tests \
+          -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }} \
+          -DCMAKE_C_COMPILER=${{ matrix.c_compiler }} \
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
 
     - name: Build
       shell: bash
